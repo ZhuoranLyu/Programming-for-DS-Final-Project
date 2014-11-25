@@ -1,0 +1,238 @@
+<html>
+  <head>
+	<script type="text/javascript" src="http://www.amcharts.com/lib/3/amcharts.js"></script>
+	<script type="text/javascript" src="http://www.amcharts.com/lib/3/serial.js"></script>
+	<script type="text/javascript" src="http://www.amcharts.com/lib/3/themes/none.js"></script> 
+	<script type="text/javascript" src="http://www.amcharts.com/lib/3/amstock.js"></script>
+	<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+	<script type="text/javascript" src="http://mpld3.github.io/js/mpld3.v0.1.js"></script>
+    <script type="text/javascript">
+        var chartData1 = [];
+		var chartData2 = [];
+		var chartData3 = [];
+		var chartData4 = [];
+
+		generateChartData();
+
+    function generateChartData() {
+	var a = {{array|safe}} 	
+	var firstDate = {{start_date|safe}}
+	var lastDate = {{end_date|safe}}
+	
+	var firstDate = new Date(firstDate);
+	var lastDate = new Date(lastDate);
+	
+	firstDate.setHours(0, 0, 0, 0);
+	lastDate.setHours(0, 0, 0, 0);
+	
+	for (var i = 0; i < a.length; i++) {
+		var newDate = new Date(firstDate);
+		newDate.setDate(newDate.getDate() + i);
+		var a1 = a[i];
+		var b1 = a[a.length-i];
+		
+		/*
+		var a1 = Math.round(Math.random() * (40 + i)) + 100 + i;
+		var b1 = Math.round(Math.random() * (1000 + i)) + 500 + i * 2;
+		
+		var a2 = Math.round(Math.random() * (100 + i)) + 200 + i;
+		var b2 = Math.round(Math.random() * (1000 + i)) + 600 + i * 2;
+
+		var a3 = Math.round(Math.random() * (100 + i)) + 200;
+		var b3 = Math.round(Math.random() * (1000 + i)) + 600 + i * 2;
+
+		var a4 = Math.round(Math.random() * (100 + i)) + 200 + i;
+		var b4 = Math.round(Math.random() * (100 + i)) + 600 + i;
+		*/
+
+		chartData1.push({
+			date: newDate,
+			value: a1,
+			volume: b1
+		});
+		/*
+		chartData2.push({
+			date: newDate,
+			value: a2,
+			volume: b2
+		});
+		chartData3.push({
+			date: newDate,
+			value: a3,
+			volume: b3
+		});
+		chartData4.push({
+			date: newDate,
+			value: a4,
+			volume: b4
+		});
+		*/
+	}
+}
+
+var chart = AmCharts.makeChart("chartdiv", {
+	type: "stock",
+    "theme": "none",
+    pathToImages: "http://www.amcharts.com/lib/3/images/",
+
+	dataSets: [{
+			title: "first data set",
+			fieldMappings: [{
+				fromField: "value",
+				toField: "value"
+			}, {
+				fromField: "volume",
+				toField: "volume"
+			}],
+			dataProvider: chartData1,
+			categoryField: "date"
+		},
+
+		{
+			title: "second data set",
+			fieldMappings: [{
+				fromField: "value",
+				toField: "value"
+			}, {
+				fromField: "volume",
+				toField: "volume"
+			}],
+			dataProvider: chartData2,
+			categoryField: "date"
+		},
+
+		{
+			title: "third data set",
+			fieldMappings: [{
+				fromField: "value",
+				toField: "value"
+			}, {
+				fromField: "volume",
+				toField: "volume"
+			}],
+			dataProvider: chartData3,
+			categoryField: "date"
+		},
+
+		{
+			title: "fourth data set",
+			fieldMappings: [{
+				fromField: "value",
+				toField: "value"
+			}, {
+				fromField: "volume",
+				toField: "volume"
+			}],
+			dataProvider: chartData4,
+			categoryField: "date"
+		}
+	],
+
+	panels: [{
+
+			showCategoryAxis: false,
+			title: "Value",
+			percentHeight: 70,
+
+			stockGraphs: [{
+				id: "g1",
+
+				valueField: "value",
+				comparable: true,
+				compareField: "value",
+				balloonText: "[[title]]:<b>[[value]]</b>",
+				compareGraphBalloonText: "[[title]]:<b>[[value]]</b>"
+			}],
+
+			stockLegend: {
+				periodValueTextComparing: "[[percents.value.close]]%",
+				periodValueTextRegular: "[[value.close]]"
+			}
+		},
+
+		{
+			title: "Volume",
+			percentHeight: 30,
+			stockGraphs: [{
+				valueField: "volume",
+				type: "column",
+				showBalloon: false,
+				fillAlphas: 1
+			}],
+
+
+			stockLegend: {
+				periodValueTextRegular: "[[value.close]]"
+			}
+		}
+	],
+
+	chartScrollbarSettings: {
+		graph: "g1"
+	},
+
+	chartCursorSettings: {
+		valueBalloonsEnabled: true,
+        fullWidth:true,
+        cursorAlpha:0.1,
+         valueLineBalloonEnabled:true,
+         valueLineEnabled:true,
+         valueLineAlpha:0.5
+	},
+
+	periodSelector: {
+		position: "left",
+		periods: [{
+			period: "MM",
+			selected: true,
+			count: 1,
+			label: "1 month"
+		}, {
+			period: "YYYY",
+			count: 1,
+			label: "1 year"
+		}, {
+			period: "YTD",
+			label: "YTD"
+		}, {
+			period: "MAX",
+			label: "MAX"
+		}]
+	},
+
+	dataSetSelector: {
+		position: "left"
+	}
+});
+    </script>
+	<style type="text/css">
+	#chartdiv {
+	width	: 100%;
+	height	: 500px;
+	
+}											
+	</style>
+    <div id = "fig01"></div>
+    
+    <script type = "text/javascript">
+      var graph = {{ js_data|safe}}
+      var fig01 = mpld3.draw_figure("fig01",graph)
+    </script>
+
+ </head>
+  <body>
+	<h2>Please enter the stock name and the start and the end date:</h2>
+
+	<form method = "get" action="/">	
+	  <input name='name' type="text" placeholder='stock name'/>
+	  <input name='start_date' type="text" placeholder='start date(e.g:2010-10-10)'/>
+	  <input name='end_date' type="text" placeholder='end date(e.g:2010-1-15)'/>
+	  <input type='hidden' name='hidden' value=''/>
+	  <input type='submit' value='Search'/>
+	</form>	  
+    
+	<div id="chartdiv"></div>
+	
+	  		
+  </body>
+</html>
