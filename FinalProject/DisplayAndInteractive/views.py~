@@ -54,12 +54,12 @@ def home(request):
 
 		# change the date to datetime in python
 		
-		start = datetime.datetime(int(start_date[0]),int(start_date[1]),int(start_date[2]))
-		end = datetime.datetime(int(end_date[0]),int(end_date[1]),int(end_date[2]))
+		start_date = datetime.datetime(int(start_date[0]),int(start_date[1]),int(start_date[2]))
+		end_date = datetime.datetime(int(end_date[0]),int(end_date[1]),int(end_date[2]))
 		
 		#using DataReader to get info from yahoo and put prices to a list
 		
-		df = web.DataReader(company_name,'yahoo',start,end)
+		df = web.DataReader(company_name,'yahoo',start_date,end_date)
 		price_list = [round(x,2) for x in df[price_type].tolist()]
 
 		#print f
